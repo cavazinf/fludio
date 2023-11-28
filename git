@@ -1,0 +1,31 @@
+1. Inicialize um repositório Git localmente no seu projeto Flutter:
+Se ainda não estiver usando controle de versão, abra um terminal na pasta do seu projeto e execute os seguintes comandos:
+
+bash
+Copy code
+git init
+git add .
+git commit -m "Primeiro commit"
+2. Crie um repositório no GitHub:
+Acesse o GitHub e faça login na sua conta.
+No canto superior direito, clique no botão "+" e selecione "Novo repositório".
+Preencha as informações (nome do repositório, descrição, público/privado, etc.) e crie o repositório.
+3. Vincule o repositório remoto ao seu repositório local:
+No terminal, execute os comandos fornecidos pelo GitHub:
+
+bash
+Copy code
+git remote add origin <URL_do_seu_repositorio_no_GitHub>
+git branch -M main
+git push -u origin main
+Substitua <URL_do_seu_repositorio_no_GitHub> pela URL do repositório que você criou no GitHub.
+
+4. Faça push do seu código para o GitHub:
+bash
+Copy code
+git push origin main
+Observações:
+Certifique-se de ter o Git instalado localmente e configurado corretamente.
+Use o arquivo .gitignore para ignorar arquivos e diretórios que não devem ser versionados (por exemplo, a pasta build do Flutter, arquivos de configuração locais, etc.).
+Lembre-se de manter suas credenciais privadas e sensíveis (como chaves de API) fora do repositório. Use variáveis de ambiente ou arquivos de configuração separados, e adicione-os ao .gitignore.
+Caso deseje, você pode utilizar o GitHub Desktop para uma interface gráfica para gerenciar os commits e push do seu código.
