@@ -1,0 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+// Recuperando dados de uma coleção
+void getUsers() {
+  FirebaseFirestore.instance
+      .collection('users')
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          print(doc.data());
+        });
+      })
+      .catchError((error) => print('Erro ao obter usuários: $error'));
+}
