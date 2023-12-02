@@ -1,0 +1,122 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Calculadora de IMC',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  TextEditingController heightController = TextEditingController();
+  TextEditingController weightController = TextEditingController();
+  double _result = 0.0;
+  String _message = '';
+
+  void calculateBMI() {
+    if (heightController.text.isEmpty || weightController.text.isEmpty) {
+      setState(() {
+        _result = 0.0;
+        _message = 'Por favor, insira altura e peso.';
+      });
+      return;
+    }
+
+    double height = double.tryParse(heightController.text);
+    double weight = double.tryParse(weightController.text);
+
+    if (height == null || weight == null || height <= 0 || weight <= 0) {
+      setState(() {
+        _result = 0.0;
+        _message = 'Altura e peso devem ser números válidos e maiores que zero.';
+      });
+      return;
+    }
+
+    double heightInMeters = height / 100;
+    double bmi = weight / (heightInMeters * heightInMeters);
+
+    setState(() {
+      _result = bmi;
+      _message = _interpretBMI(bmi);
+    });
+  }
+
+  String _interpretBMI(double bmi) {
+    if (bmi < 18.5) {
+      return 'Abaixo do peso';
+    } else if (bmi >= 18.5 && bmi < 24.9) {
+      return 'Peso normal';
+    } else if (bmi >= 25 && bmi < 29.9) {
+      return 'Sobrepeso';
+    } else if (bmi >= 30 && bmi < 34.9) {
+      return 'Obesidade grau 1';
+    } else if (bmi >= 35 && bmi < 39.9) {
+      return 'Obesidade grau 2';
+    } else {
+      return 'Obesidade grau 3';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Calculadora de IMC'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TextField(
+              controller: heightController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Altura (cm)',
+              ),
+            ),
+            SizedBox(height: 16.0),
+            TextField(
+              controller: weightController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Peso (kg)',
+              ),
+            ),
+            SizedBox(height: 24.0),
+            ElevatedButton(
+              onPressed: calculateBMI,
+              child: Text('Calcular IMC'),
+            ),
+            SizedBox(height: 24.0),
+            Text(
+              'IMC: ${_result.toStringAsFixed(2)}',
+              style: TextStyle(fontSize: 24.0),
+            ),
+            SizedBox(height: 16.0),
+            Text(
+              'Resultado: $_message',
+              style: TextStyle(fontSize: 18.0),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
