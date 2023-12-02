@@ -1,0 +1,79 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class Contact {
+  final String name;
+  final String phone;
+
+  Contact(this.name, this.phone);
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Lista de Contatos',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: ContactListScreen(),
+    );
+  }
+}
+
+class ContactListScreen extends StatelessWidget {
+  final List<Contact> contacts = [
+    Contact('João', '(11) 99999-9999'),
+    Contact('Maria', '(21) 88888-8888'),
+    Contact('Carlos', '(31) 77777-7777'),
+    // Adicione mais contatos aqui...
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Lista de Contatos'),
+      ),
+      body: ListView.builder(
+        itemCount: contacts.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(contacts[index].name),
+            subtitle: Text(contacts[index].phone),
+            leading: CircleAvatar(
+              child: Text(
+                contacts[index].name[0],
+                style: TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.blue,
+            ),
+            onTap: () {
+              // Implemente a ação ao tocar em um contato (pode ser um detalhe do contato, ligar para ele, etc.)
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text(contacts[index].name),
+                    content: Text('Número: ${contacts[index].phone}'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('Fechar'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
