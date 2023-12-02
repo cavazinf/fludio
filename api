@@ -1,0 +1,88 @@
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Consulta de CEP',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  TextEditingController _cepController = TextEditingController();
+  Map<String, dynamic> _addressData = {};
+
+  Future<void> _fetchAddress() async {
+    final cep = _cepController.text.trim();
+    final response = await http.get(Uri.parse('https://viacep.com.br/ws/$cep/json/'));
+
+    if (response.statusCode == 200) {
+      setState(() {
+        _addressData = json.decode(response.body);
+      });
+    } else {
+      setState(() {
+        _addressData = {'erro': true, 'mensagem': 'CEP não encontrado'};
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Consulta de CEP'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TextField(
+              controller: _cepController,
+              decoration: InputDecoration(labelText: 'Digite o CEP'),
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _fetchAddress,
+              child: Text('Buscar'),
+            ),
+            SizedBox(height: 20),
+            if (_addressData.isNotEmpty)
+              _addressData['erro'] == true
+                  ? Text(
+                      _addressData['mensagem'],
+                      style: TextStyle(color: Colors.red),
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('CEP: ${_addressData['cep']}'),
+                        Text('Logradouro: ${_addressData['logradouro']}'),
+                        Text('Bairro: ${_addressData['bairro']}'),
+                        Text('Cidade/UF: ${_addressData['localidade']}/${_addressData['uf']}'),
+                      ],
+                    ),
+          ],
+        ),
+      ),
+    );
+  }
+}
