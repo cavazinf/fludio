@@ -1,0 +1,62 @@
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Calculadora de IMC',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  TextEditingController heightController = TextEditingController();
+  TextEditingController weightController = TextEditingController();
+  double _result = 0.0;
+  String _message = '';
+  SharedPreferences? prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  _loadData() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _result = prefs!.getDouble('imc') ?? 0.0;
+      _message = prefs!.getString('message') ?? '';
+    });
+  }
+
+  void calculateBMI() {
+    // ... restante do código para calcular o IMC
+
+    // Salvar o IMC e a mensagem no SharedPreferences
+    prefs!.setDouble('imc', _result);
+    prefs!.setString('message', _message);
+
+    setState(() {
+      _result = bmi;
+      _message = _interpretBMI(bmi);
+    });
+  }
+
+  // Restante do código da calculadora de IMC
+  // ...
+}
