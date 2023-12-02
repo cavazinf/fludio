@@ -1,0 +1,63 @@
+Android
+Gerando uma KeyStore (Chave de Assinatura):
+
+Abra o terminal na pasta do seu projeto Flutter.
+Execute o comando abaixo para gerar uma keystore:
+bash
+Copy code
+keytool -genkey -v -keystore <nome-do-arquivo>.keystore -keyalg RSA -keysize 2048 -validity 10000 -alias <alias-do-keystore>
+Siga as instruções e preencha as informações necessárias.
+Configurando o arquivo de assinatura key.properties:
+
+Crie um arquivo key.properties no diretório android do seu projeto Flutter.
+Adicione as seguintes linhas ao arquivo, substituindo pelos seus próprios valores:
+makefile
+Copy code
+storePassword=<senha-da-keystore>
+keyPassword=<senha-da-chave>
+keyAlias=<alias-do-keystore>
+storeFile=<caminho-do-arquivo-keystore>
+Configurando o Gradle para a versão de release:
+
+Abra o arquivo android/app/build.gradle.
+Substitua android/app/build.gradle pelas seguintes configurações:
+groovy
+Copy code
+...
+android {
+    ...
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            ...
+        }
+    }
+}
+...
+Gerando o APK de release:
+
+Execute o comando abaixo para gerar o APK:
+bash
+Copy code
+flutter build apk --release
+O APK será gerado na pasta build/app/outputs/flutter-apk.
+iOS
+Configurando o arquivo de assinatura:
+
+No Xcode, abra o arquivo Runner.xcworkspace localizado na pasta ios.
+Selecione o projeto na barra lateral e vá para a seção Signing & Capabilities.
+Configure o Team para sua equipe Apple.
+Gerando o IPA de release:
+
+Execute o comando abaixo para gerar o IPA:
+bash
+Copy code
+flutter build ios --release
