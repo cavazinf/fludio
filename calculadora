@@ -1,0 +1,80 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Calculadora de IMC',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  TextEditingController heightController = TextEditingController();
+  TextEditingController weightController = TextEditingController();
+  double _result = 0.0;
+
+  void calculateBMI() {
+    double height = double.parse(heightController.text);
+    double weight = double.parse(weightController.text);
+    double heightInMeters = height / 100;
+    setState(() {
+      _result = weight / (heightInMeters * heightInMeters);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Calculadora de IMC'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TextField(
+              controller: heightController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Altura (cm)',
+              ),
+            ),
+            SizedBox(height: 16.0),
+            TextField(
+              controller: weightController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Peso (kg)',
+              ),
+            ),
+            SizedBox(height: 24.0),
+            ElevatedButton(
+              onPressed: calculateBMI,
+              child: Text('Calcular IMC'),
+            ),
+            SizedBox(height: 24.0),
+            Text(
+              'IMC: ${_result.toStringAsFixed(2)}',
+              style: TextStyle(fontSize: 24.0),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
